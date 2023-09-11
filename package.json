@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "backend files of SIH nyaylok-webapp",
   "main": "index.js",
+  "type":"module",
   "scripts": {
     "test": "node index.js"
   },
