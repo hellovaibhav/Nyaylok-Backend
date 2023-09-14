@@ -29,10 +29,26 @@ export const registerCase = async (req, res, next) => {
 
         const savedUser = await newCase.save();
 
-        res.status(200).json({ message: "Case filed successfully",savedUser});
+        res.status(200).json({ message: "Case filed successfully", savedUser });
 
     } catch (err) {
-        res.status(404).json({message:"there was some error case has not been uploaded yet"});
+        res.status(404).json({ message: "there was some error case has not been uploaded yet" });
         next(err);
     };
+};
+
+export const getUncompleteCases = async (req, res, next) => {
+    try {
+        const cases = await Case.find(
+            {
+                $or: [{ status: "Registered" }, { status: "Ongoing" }],
+            });
+
+
+        res.status(200).json({ message: `successfull found ${cases.length} cases`, cases});
+    }
+    catch (err) {
+        console.error(err);
+        next(err);
+    }
 };

@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import cors from "cors";
+import schedule from "node-schedule";
 
 // function imports
 import homeRoute from "./routes/homeRoute.js"
 import caseRoute from "./routes/caseRoute.js"
+import Case from "./models/Case.js";
 
 const app = express();
 
@@ -18,7 +20,25 @@ app.use(cookieParser());
 app.use(express.json());
 
 
-var allowedOrigins = ['localhost:2023'];
+schedule.scheduleJob('0 0 0 * * *', async () => {
+    try {
+        // Update points for cases with the specified conditions
+        const updatedCases = await Case.updateMany(
+            {
+                $or: [{ status: "Registered" }, { status: "Ongoing" }],
+            },
+            {
+                $inc: { points: 1 }, // Increment points by 1
+            }
+        );
+
+        // console.log(`Points updated for ${updatedCases} cases.`);
+    } catch (error) {
+        console.error("Error updating points:", error);
+    }
+});
+
+var allowedOrigins = ['localhost:2023','localhost:420'];
 
 
 var options = {
