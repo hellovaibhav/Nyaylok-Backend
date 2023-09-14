@@ -6,6 +6,7 @@ import cors from "cors";
 
 // function imports
 import homeRoute from "./routes/homeRoute.js"
+import caseRoute from "./routes/caseRoute.js"
 
 const app = express();
 
@@ -14,6 +15,7 @@ dotenv.config();
 const port = process.env.PORT || 1978;
 
 app.use(cookieParser());
+app.use(express.json());
 
 
 var allowedOrigins = ['localhost:2023'];
@@ -47,6 +49,7 @@ mongoose.connection.on("disconnected", () => {
 
 // middelwares
 app.use("/", homeRoute);
+app.use("/cases", caseRoute);
 
 app.listen(port, () => {
     connect();
