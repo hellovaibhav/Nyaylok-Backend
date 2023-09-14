@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import moment from "moment-timezone";
 
 const caseSchema = new mongoose.Schema({
     victimName: {
@@ -15,9 +16,9 @@ const caseSchema = new mongoose.Schema({
         // this is used to determin the area of jurisdiction of the court the case is filled in or the police station where FIR was filled 
         type: Number
     },
-    IPCsections:[{
-        type:String,
-        required:[true,"Please enter the IPC sections"],
+    IPCsections: [{
+        type: String,
+        // required:true,
     }],
     points:
     {
@@ -36,9 +37,10 @@ const caseSchema = new mongoose.Schema({
     prevCaseId: {
         type: String,
     },
-    DOF:
+    DOR:
     {
         type: Date,
+        default : Date.now(),
         required: true
     },
     DOC: {
