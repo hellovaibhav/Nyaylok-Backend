@@ -16,11 +16,13 @@ localhost:1978/cases/registerCase text in blue <br/>
 <br/>
 _example :_
 <br/>
->{<br/>
->       "victim": "Saquib",<br/>
->        "fir": "529810-123",<br/>
->        "policeStation": "Chutiya",<br/>
->        "areaPincode": 480001,<br/>
->        "IPCs": ["295","296","297"],<br/>
->        "prevCaseId": "4567-123526"<br/>
->}<br/>
+```
+{<br/>
+       "victim": "Saquib",<br/>
+        "fir": "529810-123",<br/>
+        "policeStation": "Chutiya",<br/>
+        "areaPincode": 480001,<br/>
+        "IPCs": ["295","296","297"],<br/>
+        "prevCaseId": "4567-123526"<br/>
+}<br/>
+```
