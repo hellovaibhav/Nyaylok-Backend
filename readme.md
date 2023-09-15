@@ -3,7 +3,7 @@
 ### URL for registration : 
 
 ```
-localhost:1978/cases/registerCase 
+https://nyaylok-server.onrender.com/cases/IncompleteCases/cases/registerCase 
 ```
 
 <br/>
@@ -36,12 +36,12 @@ _example :_
 ```
 
 
-# Get ongoing and registered cases
+# View all ongoing and registered cases
 
 ### URL to get pending cases :
 
 ```
-localhost:1978/cases/IncompleteCases 
+https://nyaylok-server.onrender.com/cases/IncompleteCases
 ```
 
 _output example:_
@@ -79,6 +79,31 @@ _output example:_
             "__v": 0
         }
     ]
+}
+
+```
+
+# To view limited details of particular case by case id
+
+### URL for this operation
+
+```
+https://nyaylok-server.onrender.com/cases/findCaseById/<enter case id here>
+```
+
+_example:_ 
+https://nyaylok-server.onrender.com/cases/findCaseById/15092023130528300
+
+
+_output example:_
+
+```
+{
+    "message": "Found your case",
+    "casePosition": 11,
+    "victim": "Saquib",
+    "dor": "15-09-2023",
+    "status": "Registered"
 }
 
 ```
