@@ -30,6 +30,10 @@ const caseSchema = new mongoose.Schema({
         default: 0,
         required: true
     },
+    phoneNumber:{
+        type:Number,
+        required:true
+    },
     status: {
         type: String,
         enum: {

@@ -14,6 +14,7 @@ localhost:1978/cases/registerCase
 "fir" : _string_
 "policeStation" : _string_
 "pincode" : _Number_
+"phone":"_Number_"
 "IPCs" : _ array of strings_
 "prevCaseId" : _string_
 ```
@@ -28,6 +29,7 @@ _example :_
         "fir": "529810-123",
         "policeStation": "Namkum",
         "pincode": 480001,
+        "phone":1245678321,
         "IPCs": ["295","296","297"],
         "prevCaseId": "4567-123526"
 }
