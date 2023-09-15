@@ -35,7 +35,7 @@ export const registerCase = async (req, res, next) => {
         newCase.points = score.points;
 
         const numLength = newCase.phoneNumber.toString().length;
-        
+
         if (numLength == 10) {
 
             const savedCase = await newCase.save();
@@ -97,6 +97,24 @@ export const getCaseById = async (req, res, next) => {
 
     } catch (err) {
         console.log(err);
+        next(err);
+    }
+};
+
+export const updateCase = async (req, res, next) => {
+    try {
+        const updatedCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, {
+
+            victimName: req.body.victim,
+            firNumber: req.body.fir,
+            IPCsections: req.body.IPCs,
+            prevCaseId: req.body.prevCaseId
+
+        }, { new: true });
+
+        res.status(200).json({ message: "case updated succefully", updatedCase });
+    } catch (err) {
+
         next(err);
     }
 };

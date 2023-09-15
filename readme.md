@@ -107,3 +107,59 @@ _output example:_
 }
 
 ```
+
+# To update limited detials of a case using case id
+
+### URL for this operation
+
+```
+https://nyaylok-server.onrender.com/cases/updateCase/<enter case id here>
+```
+
+_example:_ 
+https://nyaylok-server.onrender.com/cases/updateCase/15092023185735324
+
+<br/>
+**Allowed parameters for update are**<br/>
+
+```
+"victim" : _string_
+"fir" : _string_
+"IPCs" : _ array of strings_
+"prevCaseId" : _string_
+```
+<br/>
+
+_Input example:_
+
+```
+{
+    "victim":"Karmyogi"
+}
+```
+
+_Output for the following input will be :_
+
+```
+{
+    "message": "case updated succefully",
+    "updatedCase": {
+        "_id": "65045bc74f082207cd062ab5",
+        "victimName": "Karmyogi",
+        "firNumber": "36452",
+        "policeStationName": "Jaunpur Thana",
+        "areaPincode": 800002,
+        "IPCsections": [
+            "295",
+            "381",
+            "195A"
+        ],
+        "points": 62520,
+        "phoneNumber": 9651661199,
+        "status": "Registered",
+        "DOR": "2023-09-15T13:27:28.180Z",
+        "caseId": 15092023185735324,
+        "__v": 0
+    }
+}
+```
