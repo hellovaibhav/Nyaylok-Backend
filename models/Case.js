@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
-import moment from "moment-timezone";
+
+
+
+
+
 
 const caseSchema = new mongoose.Schema({
     victimName: {
@@ -40,11 +44,16 @@ const caseSchema = new mongoose.Schema({
     DOR:
     {
         type: Date,
-        default : Date.now(),
+        default: Date.now(),
         required: true
     },
     DOC: {
         type: Date,
+    }, 
+    caseId: {
+        type: Number,
+        required:true,
+        unique:true
     }
 });
 
