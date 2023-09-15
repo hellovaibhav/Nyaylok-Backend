@@ -42,10 +42,10 @@ export const getUncompleteCases = async (req, res, next) => {
         const cases = await Case.find(
             {
                 $or: [{ status: "Registered" }, { status: "Ongoing" }],
-            });
+            }).sort({points:-1});
 
 
-        res.status(200).json({ message: `successfull found ${cases.length} cases`, cases});
+        res.status(200).json({ message: `successfull found ${cases.length} cases`, cases });
     }
     catch (err) {
         console.error(err);
