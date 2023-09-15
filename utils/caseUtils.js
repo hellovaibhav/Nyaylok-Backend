@@ -20,15 +20,19 @@ export const getCaseId = async () => {
 export const getCasePosition = async (caseId) => {
     try {
 
-        const arr = await Case.find();
+        const arr = await Case.find(
+            {
+                $or: [{ status: "Registered" }, { status: "Ongoing" }],
+            }).sort({ points: -1 });
+
         let foundCase;
-        const index = arr.findIndex((element) => {
+        let index = arr.findIndex((element) => {
             if (element.caseId == caseId) {
                 foundCase = element;
                 return element.caseId == caseId;
             }
         });
-
+        index += 1;
         return { index, foundCase };
     } catch (err) {
         throw err; // Rethrow the error so it can be caught by the caller
