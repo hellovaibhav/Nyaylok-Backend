@@ -12,7 +12,6 @@ export const generateToken = async (req, res, next) => {
     const token = jwt.sign({ name: req.name, email: req.empId }, secret, { algorithm: 'HS384', expiresIn: '1h' });
     
     macaddress.one((err, mac) => {
-      console.log(mac);
       req.ip = mac;
     });
 
@@ -26,7 +25,7 @@ export const generateToken = async (req, res, next) => {
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.nyayToken;
-  console.log("in verify token func", req.cookies);
+
   if (!token) {
     next(createError(401, "You are not authenticated!"));
   }

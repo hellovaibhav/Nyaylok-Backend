@@ -16,7 +16,6 @@ import { verifyToken } from "../utils/token.js";
 
 export const registerCase = async (req, res, next) => {
     try {
-        console.log("in reg case func", req.cookies);
         verifyToken(req, res, async (err) => {
             if (err) {
                 // Handle authentication error here
@@ -54,13 +53,11 @@ export const registerCase = async (req, res, next) => {
             //             to: `+91${foundCase.phoneNumber}`
             //         });
 
-            res.status(200).json({ message: "Case filed successfully", savedCase });
+            res.status(200).json({ message: "Case filed successfully", newCase });
             // }
             // else {
             //     res.status(406).json({ message: "phone Number length not adequate" });
             // }
-
-            res.status(200).json({ message: "Case filed successfully", savedCase });
 
         });
 

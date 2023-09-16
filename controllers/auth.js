@@ -49,9 +49,7 @@ export const login = async (req, res, next) => {
     const { password, isAdmin, secretToken, ip, ...otherDetails } = user._doc;
     res.cookie("nyayToken", token, {
       httpOnly: true,
-    })
-      .status(200)
-      .json({ message: `${user.name} you have been logged in`, details: { ...otherDetails } });
+    }).status(200).json({ message: `${user.name} you have been logged in`, details: { ...otherDetails } });
   } catch (err) {
     next(err);
   }
