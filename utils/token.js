@@ -2,15 +2,17 @@ import jwt from "jsonwebtoken";
 import { createError } from "./error.js";
 import macaddress from "macaddress";
 import dotenv from "dotenv";
+import User from "../models/User.js";
 
 dotenv.config();
 const secret = process.env.JWT_SECRET;
 
+
 export const generateToken = async (req, res, next) => {
   try {
 
-    const token = jwt.sign({ name: req.name, email: req.empId }, secret, { algorithm: 'HS384', expiresIn: '1h' });
-    
+    const token = jwt.sign({ name: req.name, empId: req.empId }, secret, { algorithm: 'HS384', expiresIn: '1h' });
+
     macaddress.one((err, mac) => {
       req.ip = mac;
     });
@@ -23,16 +25,29 @@ export const generateToken = async (req, res, next) => {
   }
 };
 
-export const verifyToken = (req, res, next) => {
+export const verifyToken = async (req, res, next) => {
   const token = req.cookies.nyayToken;
 
   if (!token) {
     next(createError(401, "You are not authenticated!"));
   }
 
-  jwt.verify(token, secret, (err, user) => {
-    if (err) return next(createError(403, "Token is not valid!"));
+  let verificationIp;
+
+  macaddress.one((err, mac) => {
+    verificationIp = mac;
+  });
+
+  jwt.verify(token, secret, async (err, user) => {
+    if (err) { return next(createError(403, "Token is not valid!")); }
+
+
     req.user = user;
+
+    const foundUser = await User.findOne({ empId: req.user.empId });
+
+    if (foundUser.ip !== verificationIp) { return next(createError(403, "User needs to login again!")); }
+
     next();
   });
 };

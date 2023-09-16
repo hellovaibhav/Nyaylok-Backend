@@ -16,10 +16,10 @@ import { verifyToken } from "../utils/token.js";
 
 export const registerCase = async (req, res, next) => {
     try {
-        verifyToken(req, res, async (err) => {
+        await verifyToken(req, res, async (err) => {
             if (err) {
                 // Handle authentication error here
-                return res.status(401).json({ message: "You are not authenticated!" });
+                return res.status(401).json({ message: err.message });
             }
 
             const caseNum = await getCaseId();
@@ -41,23 +41,23 @@ export const registerCase = async (req, res, next) => {
 
             const numLength = newCase.phoneNumber.toString().length;
 
-            // if (numLength == 10) {
+            if (numLength == 10) {
 
-            //     const savedCase = await newCase.save();
-            //     const { index, foundCase } = await getCasePosition(caseNum);
+                const savedCase = await newCase.save();
+                const { index, foundCase } = await getCasePosition(caseNum);
 
-            //     client.messages
-            //         .create({
-            //             body: `Dear ${newCase.victimName}, Your case with Case Id : ${newCase.caseId} has been registered and is at position : ${index}, please check website for future updates of your case`,
-            //             from: process.env.TWILIO_PHONE_NUMBER,
-            //             to: `+91${foundCase.phoneNumber}`
-            //         });
+                client.messages
+                    .create({
+                        body: `Dear ${newCase.victimName}, Your case with Case Id : ${newCase.caseId} has been registered and is at position : ${index}, please check website for future updates of your case`,
+                        from: process.env.TWILIO_PHONE_NUMBER,
+                        to: `+91${foundCase.phoneNumber}`
+                    });
 
-            res.status(200).json({ message: "Case filed successfully", newCase });
-            // }
-            // else {
-            //     res.status(406).json({ message: "phone Number length not adequate" });
-            // }
+                res.status(200).json({ message: "Case filed successfully", savedCase });
+            }
+            else {
+                res.status(406).json({ message: "phone Number length not adequate" });
+            }
 
         });
 
