@@ -3,7 +3,7 @@
 ### URL for registration : 
 
 ```
-https://nyaylok-server.onrender.com/cases/IncompleteCases/cases/registerCase 
+https://nyaylok-server.onrender.com/cases/registerCase 
 ```
 
 <br/>
