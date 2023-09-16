@@ -34,6 +34,9 @@ export const register = async (req, res, next) => {
 };
 export const login = async (req, res, next) => {
   try {
+
+    
+
     const user = await User.findOne({ empId: req.body.empId });
 
 
@@ -53,11 +56,13 @@ export const login = async (req, res, next) => {
       }
     );
 
-    macaddress.one(function (err, mac) {
-      console.log("Mac address for this host: %s", mac);
+    macaddress.one((err, mac) => {
+      user.ip = mac;
     });
 
-    const { password, isAdmin, ip, secretToken, ...otherDetails } = user._doc;
+    await user.save();
+
+    const { password, isAdmin, secretToken, ...otherDetails } = user._doc;
     res.cookie("nyayToken", token, {
       httpOnly: true,
     })
