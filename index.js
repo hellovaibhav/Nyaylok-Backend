@@ -39,7 +39,7 @@ schedule.scheduleJob('0 0 0 * * *', async () => {
     }
 });
 
-var allowedOrigins = ['localhost:2023','localhost:420'];
+var allowedOrigins = ['http://localhost:2023','http://localhost:420'];
 
 
 var options = {
