@@ -1,9 +1,8 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { createError } from "../utils/error.js";
-import jwt from "jsonwebtoken";
-import macaddress from "macaddress";
 import dotenv from "dotenv";
+import { generateToken } from "../utils/token.js";
 
 dotenv.config();
 
@@ -35,8 +34,6 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
 
-    
-
     const user = await User.findOne({ empId: req.body.empId });
 
 
@@ -47,22 +44,9 @@ export const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
-    const token = jwt.sign(
-      { id: user.empId, name: user.name },
-      process.env.JWT_SECRET,
-      {
-        algorithm: 'HS384',
-        expiresIn: '1h'
-      }
-    );
+    const token = generateToken(user);
 
-    macaddress.one((err, mac) => {
-      user.ip = mac;
-    });
-
-    await user.save();
-
-    const { password, isAdmin, secretToken, ...otherDetails } = user._doc;
+    const { password, isAdmin, secretToken, ip, ...otherDetails } = user._doc;
     res.cookie("nyayToken", token, {
       httpOnly: true,
     })
