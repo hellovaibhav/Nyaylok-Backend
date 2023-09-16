@@ -28,6 +28,8 @@ export const generateToken = async (req, res, next) => {
 export const verifyToken = async (req, res, next) => {
   const token = req.cookies.nyayToken;
 
+  console.log(token);
+
   if (!token) {
     next(createError(401, "You are not authenticated!"));
   }
