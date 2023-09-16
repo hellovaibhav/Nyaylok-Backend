@@ -25,7 +25,7 @@ export const registerCase = async (req, res, next) => {
             policeStationName: req.body.policeStation,
             areaPincode: req.body.pincode,
             phoneNumber: req.body.phone,
-            IPCsections: req.body.IPCs,
+            IPCsections: req.body.ipc,
             prevCaseId: req.body.prevCaseId,
             caseId: caseNum
         });
@@ -107,7 +107,7 @@ export const updateCase = async (req, res, next) => {
 
             victimName: req.body.victim,
             firNumber: req.body.fir,
-            IPCsections: req.body.IPCs,
+            IPCsections: req.body.ipcs,
             prevCaseId: req.body.prevCaseId
 
         }, { new: true });

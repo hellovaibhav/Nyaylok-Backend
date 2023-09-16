@@ -1,6 +1,6 @@
 # Registration of case
 
-### URL for registration : 
+### URL for registration of case : 
 
 ```
 https://nyaylok-server.onrender.com/cases/registerCase 
