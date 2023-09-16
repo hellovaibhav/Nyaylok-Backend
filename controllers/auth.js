@@ -44,7 +44,7 @@ export const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
-    const token = generateToken(user);
+    const token = await generateToken(user);
 
     const { password, isAdmin, secretToken, ip, ...otherDetails } = user._doc;
     res.cookie("nyayToken", token, {

@@ -6,24 +6,11 @@ import dotenv from "dotenv";
 dotenv.config();
 const secret = process.env.JWT_SECRET;
 
-export const verifyToken = (req, res, next) => {
-  const token = req.cookies.access_token;
-  if (!token) {
-    return next(createError(401, "You are not authenticated!"));
-  }
-
-  jwt.verify(token, process.env.JWT, (err, user) => {
-    if (err) return next(createError(403, "Token is not valid!"));
-    req.user = user;
-    next();
-  });
-};
-
 export const generateToken = async (req, res, next) => {
   try {
 
-    const token = jwt.sign({ name: req.name, email: req.empId }, secret, {algorithm:'HS384', expiresIn: '1h' });
-
+    const token = jwt.sign({ name: req.name, email: req.empId }, secret, { algorithm: 'HS384', expiresIn: '1h' });
+    
     macaddress.one((err, mac) => {
       console.log(mac);
       req.ip = mac;
@@ -37,12 +24,26 @@ export const generateToken = async (req, res, next) => {
   }
 };
 
+export const verifyToken = (req, res, next) => {
+  const token = req.cookies.nyayToken;
+  console.log("in verify token func", req.cookies);
+  if (!token) {
+    next(createError(401, "You are not authenticated!"));
+  }
+
+  jwt.verify(token, secret, (err, user) => {
+    if (err) return next(createError(403, "Token is not valid!"));
+    req.user = user;
+    next();
+  });
+};
+
 export const verifyUser = (req, res, next) => {
   verifyToken(req, res, next, () => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next();
     } else {
-      return next(createError(403, "You are not authorized!"));
+      throw err(createError(403, "You are not authorized!"));
     }
   });
 };
