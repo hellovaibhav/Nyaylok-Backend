@@ -23,7 +23,7 @@ export const getCasePosition = async (caseId) => {
         const arr = await Case.find(
             {
                 $or: [{ status: "Registered" }, { status: "Ongoing" }],
-            }).sort({ points: -1 });
+            }).sort({ points: -1, DOF: 1 });
 
         let foundCase;
         let index = arr.findIndex((element) => {

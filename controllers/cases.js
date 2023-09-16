@@ -70,12 +70,12 @@ export const registerCase = async (req, res, next) => {
     };
 };
 
-export const getUncompleteCases = async (req, res, next) => {
+export const getIncompleteCases = async (req, res, next) => {
     try {
         const cases = await Case.find(
             {
                 $or: [{ status: "Registered" }, { status: "Ongoing" }],
-            }).sort({ points: -1 });
+            }).sort({ points: -1, DOF: 1 });
 
 
         res.status(200).json({ message: `successfull found ${cases.length} cases`, cases });
@@ -126,5 +126,25 @@ export const updateCase = async (req, res, next) => {
     } catch (err) {
 
         next(err);
+    }
+};
+
+export const getIncompleteCasesPaginated = async (req, res, next) => {
+    try {
+        // Calculate offset based on the page and pageSize
+        const pageLimit = req.query.pageLimit || 7 ;
+        const pages = req.query.page;
+        console.log(pageLimit);
+        const offset = ( pages - 1) * pageLimit;
+
+        // Your database query to retrieve a paginated subset of incomplete cases
+        const paginatedCases = await Case.find({
+            $or: [{ status: "Registered" }, { status: "Ongoing" }],
+        }).sort({ points: -1, DOF: 1 }).skip(offset).limit(pageLimit);
+
+        res.status(200).json({ message: "here are your paginated cases", paginatedCases });
+    } catch (error) {
+        console.log(error);
+        next(error);
     }
 };
