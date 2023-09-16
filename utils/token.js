@@ -28,8 +28,6 @@ export const generateToken = async (req, res, next) => {
 export const verifyToken = async (req, res, next) => {
   const token = req.cookies.nyayToken;
 
-  console.log(token);
-
   if (!token) {
     next(createError(401, "You are not authenticated!"));
   }
@@ -54,22 +52,18 @@ export const verifyToken = async (req, res, next) => {
   });
 };
 
-export const verifyUser = (req, res, next) => {
-  verifyToken(req, res, next, () => {
-    if (req.user.id === req.params.id || req.user.isAdmin) {
-      next();
-    } else {
-      throw err(createError(403, "You are not authorized!"));
-    }
-  });
-};
 
 export const verifyAdmin = (req, res, next) => {
-  verifyToken(req, res, next, () => {
-    if (req.user.isAdmin) {
-      next();
-    } else {
-      return next(createError(403, "You are not authorized!"));
+  verifyToken(req, res, async (err) => {
+    if (err) {
+      next(err);
     }
+
+    const checkUser = await User.findOne({ empId: req.user.empId });
+    
+    if (!checkUser.isAdmin) {
+      next(createError(403, "Only Judges can do this operation"));
+    }
+    next();
   });
 };

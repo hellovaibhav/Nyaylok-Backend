@@ -12,7 +12,7 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 import Case from "../models/Case.js";
 import { getCaseId, getCasePosition } from "../utils/caseUtils.js";
 import { totalPoints } from "../utils/algorithm.js";
-import { verifyToken } from "../utils/token.js";
+import { verifyAdmin, verifyToken } from "../utils/token.js";
 
 export const registerCase = async (req, res, next) => {
     try {
@@ -132,11 +132,11 @@ export const updateCase = async (req, res, next) => {
 export const getIncompleteCasesPaginated = async (req, res, next) => {
     try {
         // Calculate offset based on the page and pageSize
-        const pageLimit = req.query.pageLimit || 7 ;
+        const pageLimit = req.query.pageLimit || 7;
         const pages = req.query.page;
 
-        
-        const offset = ( pages - 1) * pageLimit;
+
+        const offset = (pages - 1) * pageLimit;
 
         // Your database query to retrieve a paginated subset of incomplete cases
         const paginatedCases = await Case.find({
@@ -147,5 +147,56 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
     } catch (error) {
         console.log(error);
         next(error);
+    }
+};
+
+export const variousCaseCount = async (req, res) => {
+    const registeredCases = await Case.find({ status: "Registered" });
+    const ongoingCases = await Case.find({ status: "Ongoing" });
+    const completedCases = await Case.find({ status: "Completed" });
+
+    const response = [{ "Registered Cases": registeredCases.length },
+    { "Ongoing Cases": ongoingCases.length },
+    { "Completed Cases": completedCases.length }];
+
+    console.log(registeredCases.length);
+
+    res.status(200).json({ message: "working bro", response });
+};
+
+export const upgradeToOngoing = async (req, res, next) => {
+
+    try {
+        await verifyToken(req, res, async (err) => {
+            if (err) {
+                // Handle authentication error here
+                return res.status(401).json({ message: err.message });
+            }
+
+            const foundCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, { status: "Ongoing" }, { new: true });
+
+            res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const upgradeToCompleted = async (req, res, next) => {
+
+    try {
+        await verifyAdmin(req, res, async (err) => {
+            if (err) {
+                // Handle authentication error here
+                return res.status(401).json({ message: err.message });
+            }
+            
+            const foundCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, { status: "Completed" }, { new: true });
+
+            res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
+        });
+    } catch (err) {
+        next(err);
     }
 };
