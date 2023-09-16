@@ -8,6 +8,7 @@ import schedule from "node-schedule";
 // function imports
 import homeRoute from "./routes/homeRoute.js"
 import caseRoute from "./routes/caseRoute.js"
+import authRoute from "./routes/authRoute.js"
 import Case from "./models/Case.js";
 
 const app = express();
@@ -70,6 +71,7 @@ mongoose.connection.on("disconnected", () => {
 // middelwares
 app.use("/", homeRoute);
 app.use("/cases", caseRoute);
+app.use("/auth", authRoute);
 
 app.listen(port, () => {
     connect();

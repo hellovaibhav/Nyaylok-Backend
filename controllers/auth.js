@@ -1,7 +1,8 @@
 import User from "../models/User.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { createError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import macaddress from "macaddress";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -11,20 +12,21 @@ export const register = async (req, res, next) => {
 
     const { password, confirmPassword, ...otherDetails } = req.body;
 
-    if(password === confirmPassword){
-    const salt = bcrypt.genSaltSync(process.env.SALT);
+    if (password === confirmPassword) {
+      const salt = bcrypt.genSaltSync(Number(process.env.SALT));
 
-    const hashedPassowrd = bcrypt.hashSync(password, salt);
+      const hashedPassowrd = bcrypt.hashSync(password, salt);
 
-    const newUser = new User({
-      ...req.body,
-      password: hashedPassowrd,
-    });
+      const newUser = new User({
+        ...req.body,
+        password: hashedPassowrd,
+      });
 
-    await newUser.save();
-    res.status(200).send("User has been created.");}
-    else{
-      res.status()
+      await newUser.save();
+      res.status(200).send("User has been created.");
+    }
+    else {
+      res.status(403).send("confirm password dosen't match");
     }
   } catch (err) {
     next(err);
@@ -32,33 +34,35 @@ export const register = async (req, res, next) => {
 };
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ username: req.body.empId });
+    const user = await User.findOne({ empId: req.body.empId });
+
+
     if (!user) return next(createError(404, "User not found!"));
 
-    const isPasswordCorrect = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
+    const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
+
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
     const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.JWT,
-      "Stack", {
-
-      expiresIn: '1h' // expires in 1 hrs
-
-    }
+      { id: user.empId, name: user.name },
+      process.env.JWT_SECRET,
+      {
+        algorithm: 'HS384',
+        expiresIn: '1h'
+      }
     );
 
-    const { password, isAdmin, ...otherDetails } = user._doc;
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
+    macaddress.one(function (err, mac) {
+      console.log("Mac address for this host: %s", mac);
+    });
+
+    const { password, isAdmin, ip, secretToken, ...otherDetails } = user._doc;
+    res.cookie("nyayToken", token, {
+      httpOnly: true,
+    })
       .status(200)
-      .json({ details: { ...otherDetails }, isAdmin });
+      .json({ message: `${user.name} you have been logged in`, details: { ...otherDetails } });
   } catch (err) {
     next(err);
   }

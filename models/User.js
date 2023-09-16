@@ -22,9 +22,8 @@ const userSchema = new mongoose.Schema({
     ip: {
         type: String
     },
-    token: {
-        type: String,
-        default: NULL
+    secretToken: {
+        type: String
     },
     isAdmin: {
         type: Boolean,
