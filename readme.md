@@ -342,3 +342,67 @@ _example output:_
 }
 ```
 
+## Get case counts of various types of cases (_on the basis of their status_)
+
+### Endpoint for this method
+
+```
+https://nyaylok-backend.vercel.app/cases/caseCounts
+```
+
+The ouput is this is Array of 3 JSON objects namely ***Registered Cases*** , ***Ongoing Cases*** and ***Completed Cases***<br/>
+
+_Sample Output:_
+
+{
+    "response": [
+        {
+            "Registered Cases": 60
+        },
+        {
+            "Ongoing Cases": 2
+        },
+        {
+            "Completed Cases": 3
+        }
+    ]
+}
+
+## Upgrade a case's status to Ongoing
+
+### Endpoint for this method
+
+```
+https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/<id of the case you want to upgrade status of>
+```
+
+**Example Endpoint:**<br/>
+https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/16092023140905868<br/>
+
+This endpoint can only be triggered by ***authencticated users***.
+
+_Sample Output:_
+
+{
+    "message": "Case number : 16092023140905868's status has been upgraded to Ongoing"
+}
+
+## Upgrade a case's status to Completed
+
+### Endpoint for this method
+
+```
+https://nyaylok-backend.vercel.app/cases/upgradeToCompleted/<id of the case you want to upgrade status of>
+```
+
+**Example Endpoint:**<br/>
+https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/15092023180435434<br/>
+
+This endpoint can only be triggered by the ***judge of the court*** to mark the closing of the case.
+
+_Sample Output:_
+
+{
+    "message": "Case number : 15092023180435434's status has been upgraded to Completed"
+}
+

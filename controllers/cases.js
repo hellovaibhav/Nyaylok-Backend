@@ -161,7 +161,7 @@ export const variousCaseCount = async (req, res) => {
 
     console.log(registeredCases.length);
 
-    res.status(200).json({ message: "working bro", response });
+    res.status(200).json({ response });
 };
 
 export const upgradeToOngoing = async (req, res, next) => {
