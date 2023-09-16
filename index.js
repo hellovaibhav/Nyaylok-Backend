@@ -17,6 +17,22 @@ dotenv.config();
 
 const port = process.env.PORT || 1978;
 
+var allowedOrigins = ['http://localhost:2023', 'http://localhost:420'];
+
+
+var options = {
+    credentials: true,
+    origin: (function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    })
+};
+
+app.use(cors(options));
+
 app.use(cookieParser());
 app.use(express.json());
 
@@ -39,20 +55,7 @@ schedule.scheduleJob('0 0 0 * * *', async () => {
     }
 });
 
-var allowedOrigins = ['http://localhost:2023','http://localhost:420'];
 
-
-var options = {
-    origin: function (origin, callback) {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    }
-};
-
-app.use(cors(options));
 
 const connect = () => {
     try {
