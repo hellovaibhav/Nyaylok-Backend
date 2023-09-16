@@ -1,42 +1,91 @@
-# Registration of case
+# User related API's
 
-### URL for registration of case : 
+## User Registration
+
+### Endpoint for user registration : 
 
 ```
 https://nyaylok-server.onrender.com/cases/registerCase 
 ```
 
 <br/>
+
+**Paramaters are passed by the value** <br/>
+
+```
+{
+    "empId": String ,
+    "name": String,
+    "email":valid email String,
+    "password": String,
+    "confirmPassword": String matching the password input
+}
+```
+<br/>
+
+_sample input :_
+
+
+```
+{
+    "empId":"2021UG2015",
+    "name":"Saquib",
+    "email":"saquibali353@outlook.com",
+    "password":"123",
+    "confirmPassword":"123"
+}
+```
+
+## User Log in
+
+### URL for logging in
+
+```
+https://nyaylok-server.onrender.com/cases/login 
+```
+<br/>
 **Paramaters are passed by the value**<br/>
 
 ```
-"victim" : _string_
-"fir" : _string_
-"policeStation" : _string_
-"pincode" : _Number_
-"phone":"_Number_"
-"ipc" : _ array of strings_
-"prevCaseId" : _string_
+{
+    "empId": String ,
+    "password": String
+}
 ```
 <br/>
+
 
 _example :_
 
 
 ```
 {
-       "victim": "Saquib,
-        "fir": "529810-123",
-        "policeStation": "Namkum",
-        "pincode": 480001,
-        "phone":1245678321,
-        "ipc": ["295","296","297"],
-        "prevCaseId": "4567-123526"
+    "empId":"2021UG2023",
+    "password":"123"
 }
 ```
+after succesful logging in a **cookie** name *nyayToken* will be generated and some basic information will be displayed : <br/>
+
+_example output:_
+
+```
+{
+    "message": "Vaibhav you have been logged in",
+    "details": {
+        "_id": "650474e713f3c1c5842f9f7b",
+        "empId": "2021UG2023",
+        "name": "Vaibhav",
+        "email": "vermavaibhav2005@gmail.com",
+        "__v": 0
+    }
+}
+```
+> ~~this unique token when pasted in right way into the browser can be used by anyone to signin without logging in~~
 
 
-# View all ongoing and registered cases
+# Case realted API's
+
+## View all ongoing and registered cases
 
 ### URL to get pending cases :
 
@@ -83,7 +132,7 @@ _output example:_
 
 ```
 
-# To view limited details of particular case by case id
+## To view limited details of particular case by case id
 
 ### URL for this operation
 
@@ -108,7 +157,88 @@ _output example:_
 
 ```
 
-# To update limited detials of a case using case id
+## **Paginated** output of ongoing and pending cases ( _Incomplete Cases_ )
+
+### endpoint for this operation
+
+```
+https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=<enter the page number you want to see here>&pageLimit=<enter the number of elements you want to see in a single page here>
+```
+
+_sample endpoint:_
+
+https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=2&pageLimit=3 <br/>
+
+The above endpoint will display contents of ***page number : 2***  and on each page there would be a ***limit of 3 cases per page*** <br/>
+
+_sample output:_
+
+```
+{
+    "message": "here are your paginated cases",
+    "paginatedCases": [
+        {
+            "_id": "65045100e3f279dafa2189b1",
+            "victimName": "Nishant",
+            "firNumber": "51352",
+            "policeStationName": "Siwan Thana",
+            "areaPincode": 841286,
+            "IPCsections": [
+                "171G",
+                "381",
+                "195A"
+            ],
+            "points": 98502,
+            "phoneNumber": 7654531965,
+            "status": "Registered",
+            "DOR": "2023-09-15T12:41:32.422Z",
+            "caseId": 15092023181136588,
+            "__v": 0
+        },
+        {
+            "_id": "6504512e06dacc69f6b9c53b",
+            "victimName": "Vivek",
+            "firNumber": "51352",
+            "policeStationName": "Jamshedpur Thana",
+            "areaPincode": 841286,
+            "IPCsections": [
+                "171G",
+                "381",
+                "195A"
+            ],
+            "points": 98502,
+            "phoneNumber": 7654531965,
+            "status": "Registered",
+            "DOR": "2023-09-15T12:42:21.163Z",
+            "caseId": 15092023181222292,
+            "__v": 0
+        },
+        {
+            "_id": "65040940ca32c277b1b44844",
+            "victimName": "Saquib",
+            "firNumber": "21562",
+            "policeStationName": "Patna Thana",
+            "areaPincode": 800002,
+            "IPCsections": [
+                "171G",
+                "381",
+                "195A"
+            ],
+            "points": 98502,
+            "status": "Registered",
+            "DOR": "2023-09-15T07:35:27.600Z",
+            "caseId": 15092023130528300,
+            "__v": 0
+        }
+    ]
+}
+```
+
+**If no parameter is passed as PageCount the default value will be 7 elements per page** and the endpoint would look like this: <br/>
+
+https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=2 <br/>
+
+## Update limited detials of a case using case id
 
 ### URL for this operation
 
@@ -163,3 +293,52 @@ _Output for the following input will be :_
     }
 }
 ```
+
+## Register Case
+
+
+### endpoint for registering case
+
+```
+https://nyaylok-server.onrender.com/cases/registerCase
+```
+
+_example input:_ 
+
+```
+{
+    "victim": "Saquib",
+    "fir": "36452",
+    "policeStation": "Patna Thana",
+    "pincode": 800002,
+    "phone":*********,
+    "ipc": ["295","381","195A"]
+}
+```
+
+_example output:_
+
+```
+{
+    "message": "Case filed successfully",
+    "savedCase": {
+        "victimName": "Saquib",
+        "firNumber": "36452",
+        "policeStationName": "Patna Thana",
+        "areaPincode": 800002,
+        "IPCsections": [
+            "295",
+            "381",
+            "195A"
+        ],
+        "points": 62520,
+        "phoneNumber": *********,
+        "status": "Registered",
+        "DOR": "2023-09-16T18:34:42.859Z",
+        "caseId": 17092023002703122,
+        "_id": "6505fa7f76d05b6868f3d7a0",
+        "__v": 0
+    }
+}
+```
+

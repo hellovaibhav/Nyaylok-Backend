@@ -134,7 +134,8 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
         // Calculate offset based on the page and pageSize
         const pageLimit = req.query.pageLimit || 7 ;
         const pages = req.query.page;
-        console.log(pageLimit);
+
+        
         const offset = ( pages - 1) * pageLimit;
 
         // Your database query to retrieve a paginated subset of incomplete cases
