@@ -15,7 +15,7 @@ https://nyaylok-server.onrender.com/cases/registerCase
 "policeStation" : _string_
 "pincode" : _Number_
 "phone":"_Number_"
-"IPCs" : _ array of strings_
+"ipc" : _ array of strings_
 "prevCaseId" : _string_
 ```
 <br/>
@@ -30,7 +30,7 @@ _example :_
         "policeStation": "Namkum",
         "pincode": 480001,
         "phone":1245678321,
-        "IPCs": ["295","296","297"],
+        "ipc": ["295","296","297"],
         "prevCaseId": "4567-123526"
 }
 ```
@@ -125,7 +125,7 @@ https://nyaylok-server.onrender.com/cases/updateCase/15092023185735324
 ```
 "victim" : _string_
 "fir" : _string_
-"IPCs" : _ array of strings_
+"ipc" : _ array of strings_
 "prevCaseId" : _string_
 ```
 <br/>
