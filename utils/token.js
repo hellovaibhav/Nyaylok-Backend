@@ -60,7 +60,7 @@ export const verifyAdmin = (req, res, next) => {
     }
 
     const checkUser = await User.findOne({ empId: req.user.empId });
-    
+
     if (!checkUser.isAdmin) {
       next(createError(403, "Only Judges can do this operation"));
     }

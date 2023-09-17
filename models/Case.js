@@ -43,7 +43,7 @@ const caseSchema = new mongoose.Schema({
         default: "Registered",
     },
     prevCaseId: {
-        type: String,
+        type: Number,
     },
     DOR:
     {

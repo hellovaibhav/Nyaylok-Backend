@@ -253,10 +253,10 @@ https://nyaylok-server.onrender.com/cases/updateCase/15092023185735324
 **Allowed parameters for update are**<br/>
 
 ```
-"victim" : _string_
-"fir" : _string_
-"ipc" : _ array of strings_
-"prevCaseId" : _string_
+"victim" : String
+"fir" : String
+"ipc" : array of strings
+"prevCaseId" : String
 ```
 <br/>
 
@@ -301,6 +301,20 @@ _Output for the following input will be :_
 
 ```
 https://nyaylok-server.onrender.com/cases/registerCase
+```
+
+_input fields:_
+
+```
+{
+    "victim": String,
+    "fir": String,
+    "policeStation": String,
+    "pincode": Number,
+    "phone":Number 10 digits only,
+    "ipc": Array of Strings
+    "prevCase": Number
+}
 ```
 
 _example input:_ 
@@ -382,10 +396,11 @@ https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/16092023140905868<br/>
 This endpoint can only be triggered by ***authencticated users***.
 
 _Sample Output:_
-
+```
 {
     "message": "Case number : 16092023140905868's status has been upgraded to Ongoing"
 }
+```
 
 ## Upgrade a case's status to Completed
 
@@ -401,8 +416,9 @@ https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/15092023180435434<br/>
 This endpoint can only be triggered by the ***judge of the court*** to mark the closing of the case.
 
 _Sample Output:_
-
+```
 {
     "message": "Case number : 15092023180435434's status has been upgraded to Completed"
 }
 
+```
