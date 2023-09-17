@@ -29,7 +29,7 @@ export const verifyToken = async (req, res, next) => {
   const token = req.cookies.nyayToken;
 
   if (!token) {
-    next(createError(401, "You are not authenticated!"));
+    return next(createError(401, "You are not authenticated!"));
   }
 
   let verificationIp;
@@ -56,7 +56,7 @@ export const verifyToken = async (req, res, next) => {
 export const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, async (err) => {
     if (err) {
-      next(err);
+     return next(err);
     }
 
     const checkUser = await User.findOne({ empId: req.user.empId });

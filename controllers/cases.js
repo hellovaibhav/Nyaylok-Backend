@@ -16,7 +16,6 @@ export const registerCase = async (req, res, next) => {
     try {
         await verifyToken(req, res, async (err) => {
             if (err) {
-                // Handle authentication error here
                 return res.status(401).json({ message: err.message });
             }
 
@@ -51,20 +50,15 @@ export const registerCase = async (req, res, next) => {
                         to: `+91${foundCase.phoneNumber}`
                     });
 
-                res.status(200).json({ message: "Case filed successfully", savedCase });
+                return res.status(200).json({ message: "Case filed successfully", savedCase });
             }
             else {
-                res.status(406).json({ message: "phone Number length not adequate" });
+                return res.status(406).json({ message: "phone Number length not adequate" });
             }
 
         });
-
-
-
-
     } catch (err) {
-        res.status(404).json({ message: "there was some error case has not been uploaded yet" });
-        next(err);
+        return res.status(404).json({ message: "there was some error case has not been uploaded yet" });
     };
 };
 
@@ -189,7 +183,7 @@ export const upgradeToCompleted = async (req, res, next) => {
                 // Handle authentication error here
                 return res.status(401).json({ message: err.message });
             }
-            
+
             const foundCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, { status: "Completed" }, { new: true });
 
             res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
