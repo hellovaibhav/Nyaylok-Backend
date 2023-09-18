@@ -48,7 +48,8 @@ export const login = async (req, res, next) => {
     res
       .cookie("nyayToken", token, {
         httpOnly: true,
-        secure: false,
+        secure: true,
+        sameSite:'None',
         expires: new Date(Date.now() + 4 * 60 * 60 * 1000),
       })
       .status(200)

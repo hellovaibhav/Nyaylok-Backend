@@ -22,7 +22,6 @@ var allowedOrigins = ['http://localhost:2023', 'http://localhost:420', 'https://
 
 var options = {
     credentials: true,
-    SameSite:"None",
     origin: (function (origin, callback) {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true)
