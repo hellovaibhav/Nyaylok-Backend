@@ -5,7 +5,7 @@
 ### Endpoint for user registration : 
 
 ```
-POST : https://nyaylok-server.onrender.com/auth/registerCase 
+POST : https://nyaylok-server.onrender.com/auth/register
 ```
 
 <br/>
@@ -41,7 +41,7 @@ _sample input :_
 ### URL for logging in
 
 ```
-POST : https://nyaylok-server.onrender.com/auth/login 
+POST : https://nyaylok-server.onrender.com/auth/login
 ```
 <br/>
 **Paramaters are passed by the value**<br/>
