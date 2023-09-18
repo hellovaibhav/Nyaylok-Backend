@@ -8,7 +8,6 @@ dotenv.config();
 
 export const register = async (req, res, next) => {
   try {
-
     const { password, confirmPassword, ...otherDetails } = req.body;
 
     if (password === confirmPassword) {
@@ -23,8 +22,7 @@ export const register = async (req, res, next) => {
 
       await newUser.save();
       res.status(200).send("User has been created.");
-    }
-    else {
+    } else {
       res.status(403).send("confirm password dosen't match");
     }
   } catch (err) {
@@ -33,25 +31,32 @@ export const register = async (req, res, next) => {
 };
 export const login = async (req, res, next) => {
   try {
-
     const user = await User.findOne({ empId: req.body.empId });
-
 
     if (!user) return next(createError(404, "User not found!"));
 
-    const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
 
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
-    const token = await generateToken(user);
-
+    const { token, userToken } = await generateToken(user);
     const { password, isAdmin, secretToken, ip, ...otherDetails } = user._doc;
-    res.cookie("nyayToken", token, {
-      httpOnly: true,
-      secure: false,
-      expires: new Date(Date.now() + 4 * 60 * 60 * 1000),
-    }).status(200).json({ message: `${user.name} you have been logged in`, details: { ...otherDetails } });
+    res
+      .cookie("nyayToken", token, {
+        httpOnly: true,
+        secure: false,
+        expires: new Date(Date.now() + 4 * 60 * 60 * 1000),
+      })
+      .status(200)
+      .json({
+        message: `${user.name} you have been logged in`,
+        details: { ...otherDetails },
+        value: userToken,
+      });
   } catch (err) {
     next(createError(404, "Something went Wrong !"));
   }

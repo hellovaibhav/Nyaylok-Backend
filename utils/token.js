@@ -6,12 +6,14 @@ import User from "../models/User.js";
 
 dotenv.config();
 const secret = process.env.JWT_SECRET;
+const frontSecret = process.env.FRONTEND_SECRET;
 
 
 export const generateToken = async (req, res, next) => {
   try {
 
     const token = jwt.sign({ name: req.name, empId: req.empId }, secret, { algorithm: 'HS384', expiresIn: '1h' });
+    const userToken = jwt.sign({ name: req.name }, frontSecret, { algorithm: 'HS384', expiresIn: '1h' });
 
     macaddress.one((err, mac) => {
       req.ip = mac;
@@ -19,7 +21,7 @@ export const generateToken = async (req, res, next) => {
 
     await req.save();
 
-    return token;
+    return {token,userToken};
   } catch (err) {
     return err;
   }
@@ -48,7 +50,7 @@ export const verifyToken = async (req, res, next) => {
 
     if (foundUser.ip !== verificationIp) { return next(createError(403, "User needs to login again!")); }
 
-    next();
+   next();
   });
 };
 
@@ -56,7 +58,7 @@ export const verifyToken = async (req, res, next) => {
 export const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, async (err) => {
     if (err) {
-     return next(err);
+      return next(err);
     }
 
     const checkUser = await User.findOne({ empId: req.user.empId });

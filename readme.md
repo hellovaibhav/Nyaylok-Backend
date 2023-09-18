@@ -5,7 +5,7 @@
 ### Endpoint for user registration : 
 
 ```
-https://nyaylok-server.onrender.com/cases/registerCase 
+POST : https://nyaylok-server.onrender.com/auth/register
 ```
 
 <br/>
@@ -41,7 +41,7 @@ _sample input :_
 ### URL for logging in
 
 ```
-https://nyaylok-server.onrender.com/cases/login 
+POST : https://nyaylok-server.onrender.com/auth/login
 ```
 <br/>
 **Paramaters are passed by the value**<br/>
@@ -85,12 +85,75 @@ _example output:_
 
 # Case realted API's
 
+
+## Register Case
+
+
+### endpoint for registering case
+
+```
+POST : https://nyaylok-server.onrender.com/cases/registerCase
+```
+
+_input fields:_
+
+```
+{
+    "victim": String,
+    "fir": String,
+    "policeStation": String,
+    "pincode": Number,
+    "phone":Number 10 digits only,
+    "ipc": Array of Strings
+    "prevCase": Number
+}
+```
+
+_example input:_ 
+
+```
+{
+    "victim": "Saquib",
+    "fir": "36452",
+    "policeStation": "Patna Thana",
+    "pincode": 800002,
+    "phone":*********,
+    "ipc": ["295","381","195A"]
+}
+```
+
+_example output:_
+
+```
+{
+    "message": "Case filed successfully",
+    "savedCase": {
+        "victimName": "Saquib",
+        "firNumber": "36452",
+        "policeStationName": "Patna Thana",
+        "areaPincode": 800002,
+        "IPCsections": [
+            "295",
+            "381",
+            "195A"
+        ],
+        "points": 62520,
+        "phoneNumber": *********,
+        "status": "Registered",
+        "DOR": "2023-09-16T18:34:42.859Z",
+        "caseId": 17092023002703122,
+        "_id": "6505fa7f76d05b6868f3d7a0",
+        "__v": 0
+    }
+}
+```
+
 ## View all ongoing and registered cases
 
 ### URL to get pending cases :
 
 ```
-https://nyaylok-server.onrender.com/cases/IncompleteCases
+GET : https://nyaylok-server.onrender.com/cases/IncompleteCases
 ```
 
 _output example:_
@@ -137,7 +200,7 @@ _output example:_
 ### URL for this operation
 
 ```
-https://nyaylok-server.onrender.com/cases/findCaseById/<enter case id here>
+GET : https://nyaylok-server.onrender.com/cases/findCaseById/<enter case id here>
 ```
 
 _example:_ 
@@ -157,12 +220,12 @@ _output example:_
 
 ```
 
-## **Paginated** output of ongoing and pending cases ( _Incomplete Cases_ )
+## Paginated output of ongoing and pending cases ( _Incomplete Cases_ )
 
 ### endpoint for this operation
 
 ```
-https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=<enter the page number you want to see here>&pageLimit=<enter the number of elements you want to see in a single page here>
+GET : https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=<enter the page number you want to see here>&pageLimit=<enter the number of elements you want to see in a single page here>
 ```
 
 _sample endpoint:_
@@ -234,16 +297,44 @@ _sample output:_
 }
 ```
 
-**If no parameter is passed as PageCount the default value will be 7 elements per page** and the endpoint would look like this: <br/>
+**If no parameter is passed as PageCount the default value will be _7 elements per page_** and the endpoint would look like this: <br/>
 
 https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=2 <br/>
+
+
+## Get case counts of various types of cases (_on the basis of their status_)
+
+### Endpoint for this method
+
+```
+GET : https://nyaylok-server.onrender.com/cases/caseCounts
+```
+
+The ouput is this is Array of 3 JSON objects namely ***Registered Cases*** , ***Ongoing Cases*** and ***Completed Cases***<br/>
+
+_Sample Output:_
+
+{
+    "response": [
+        {
+            "Registered Cases": 60
+        },
+        {
+            "Ongoing Cases": 2
+        },
+        {
+            "Completed Cases": 3
+        }
+    ]
+}
+
 
 ## Update limited detials of a case using case id
 
 ### URL for this operation
 
 ```
-https://nyaylok-server.onrender.com/cases/updateCase/<enter case id here>
+PATCH : https://nyaylok-server.onrender.com/cases/updateCase/<enter case id here>
 ```
 
 _example:_ 
@@ -294,104 +385,16 @@ _Output for the following input will be :_
 }
 ```
 
-## Register Case
-
-
-### endpoint for registering case
-
-```
-https://nyaylok-server.onrender.com/cases/registerCase
-```
-
-_input fields:_
-
-```
-{
-    "victim": String,
-    "fir": String,
-    "policeStation": String,
-    "pincode": Number,
-    "phone":Number 10 digits only,
-    "ipc": Array of Strings
-    "prevCase": Number
-}
-```
-
-_example input:_ 
-
-```
-{
-    "victim": "Saquib",
-    "fir": "36452",
-    "policeStation": "Patna Thana",
-    "pincode": 800002,
-    "phone":*********,
-    "ipc": ["295","381","195A"]
-}
-```
-
-_example output:_
-
-```
-{
-    "message": "Case filed successfully",
-    "savedCase": {
-        "victimName": "Saquib",
-        "firNumber": "36452",
-        "policeStationName": "Patna Thana",
-        "areaPincode": 800002,
-        "IPCsections": [
-            "295",
-            "381",
-            "195A"
-        ],
-        "points": 62520,
-        "phoneNumber": *********,
-        "status": "Registered",
-        "DOR": "2023-09-16T18:34:42.859Z",
-        "caseId": 17092023002703122,
-        "_id": "6505fa7f76d05b6868f3d7a0",
-        "__v": 0
-    }
-}
-```
-
-## Get case counts of various types of cases (_on the basis of their status_)
-
-### Endpoint for this method
-
-```
-https://nyaylok-backend.vercel.app/cases/caseCounts
-```
-
-The ouput is this is Array of 3 JSON objects namely ***Registered Cases*** , ***Ongoing Cases*** and ***Completed Cases***<br/>
-
-_Sample Output:_
-
-{
-    "response": [
-        {
-            "Registered Cases": 60
-        },
-        {
-            "Ongoing Cases": 2
-        },
-        {
-            "Completed Cases": 3
-        }
-    ]
-}
-
 ## Upgrade a case's status to Ongoing
 
 ### Endpoint for this method
 
 ```
-https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/<id of the case you want to upgrade status of>
+PATCH : https://nyaylok-server.onrender.com/cases/upgradeToOngoing/<id of the case you want to upgrade status of>
 ```
 
 **Example Endpoint:**<br/>
-https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/16092023140905868<br/>
+https://nyaylok-server.onrender.com/cases/upgradeToOngoing/16092023140905868<br/>
 
 This endpoint can only be triggered by ***authencticated users***.
 
@@ -407,11 +410,11 @@ _Sample Output:_
 ### Endpoint for this method
 
 ```
-https://nyaylok-backend.vercel.app/cases/upgradeToCompleted/<id of the case you want to upgrade status of>
+PATCH : https://nyaylok-server.onrender.com/cases/upgradeToCompleted/<id of the case you want to upgrade status of>
 ```
 
 **Example Endpoint:**<br/>
-https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/15092023180435434<br/>
+https://nyaylok-server.onrender.com/cases/upgradeToOngoing/15092023180435434<br/>
 
 This endpoint can only be triggered by the ***judge of the court*** to mark the closing of the case.
 
