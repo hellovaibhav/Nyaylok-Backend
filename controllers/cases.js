@@ -116,7 +116,7 @@ export const updateCase = async (req, res, next) => {
 
         res.status(200).json({ message: "case updated succefully", updatedCase });
     } catch (err) {
-
+        console.error(err);
         next(err);
     }
 };
@@ -170,6 +170,7 @@ export const upgradeToOngoing = async (req, res, next) => {
             res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
         });
     } catch (err) {
+        console.error(err);
         next(err);
     }
 };
@@ -189,6 +190,7 @@ export const upgradeToCompleted = async (req, res, next) => {
             res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
         });
     } catch (err) {
+        console.error(err);
         next(err);
     }
 };
