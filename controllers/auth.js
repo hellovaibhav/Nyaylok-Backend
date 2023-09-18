@@ -44,14 +44,14 @@ export const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
-    const token = await generateToken(user);
+    const {token,userToken} = await generateToken(user);
 
     const { password, isAdmin, secretToken, ip, ...otherDetails } = user._doc;
     res.cookie("nyayToken", token, {
       httpOnly: true,
       secure: false,
       expires: new Date(Date.now() + 4 * 60 * 60 * 1000),
-    }).status(200).json({ message: `${user.name} you have been logged in`, details: { ...otherDetails } });
+    }).status(200).json({ message: `${user.name} you have been logged in`, details: { ...otherDetails },userToken});
   } catch (err) {
     next(createError(404, "Something went Wrong !"));
   }
