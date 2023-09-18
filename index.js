@@ -17,11 +17,12 @@ dotenv.config();
 
 const port = process.env.PORT || 1978;
 
-var allowedOrigins = ['http://localhost:2023', 'http://localhost:420','https://nyaylok.onrender.com'];
+var allowedOrigins = ['http://localhost:2023', 'http://localhost:420', 'https://nyaylok.onrender.com'];
 
 
 var options = {
     credentials: true,
+    SameSite:"None",
     origin: (function (origin, callback) {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true)
