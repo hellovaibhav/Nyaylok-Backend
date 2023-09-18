@@ -48,7 +48,7 @@ export const verifyToken = async (req, res, next) => {
 
     if (foundUser.ip !== verificationIp) { return next(createError(403, "User needs to login again!")); }
 
-    next();
+   next();
   });
 };
 
@@ -56,7 +56,7 @@ export const verifyToken = async (req, res, next) => {
 export const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, async (err) => {
     if (err) {
-     return next(err);
+      return next(err);
     }
 
     const checkUser = await User.findOne({ empId: req.user.empId });

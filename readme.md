@@ -307,7 +307,7 @@ https://nyaylok-server.onrender.com/cases/IncompleteCasesPaginated/?page=2 <br/>
 ### Endpoint for this method
 
 ```
-GET : https://nyaylok-backend.vercel.app/cases/caseCounts
+GET : https://nyaylok-server.onrender.com/cases/caseCounts
 ```
 
 The ouput is this is Array of 3 JSON objects namely ***Registered Cases*** , ***Ongoing Cases*** and ***Completed Cases***<br/>
@@ -390,11 +390,11 @@ _Output for the following input will be :_
 ### Endpoint for this method
 
 ```
-PATCH : https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/<id of the case you want to upgrade status of>
+PATCH : https://nyaylok-server.onrender.com/cases/upgradeToOngoing/<id of the case you want to upgrade status of>
 ```
 
 **Example Endpoint:**<br/>
-https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/16092023140905868<br/>
+https://nyaylok-server.onrender.com/cases/upgradeToOngoing/16092023140905868<br/>
 
 This endpoint can only be triggered by ***authencticated users***.
 
@@ -410,11 +410,11 @@ _Sample Output:_
 ### Endpoint for this method
 
 ```
-PATCH : https://nyaylok-backend.vercel.app/cases/upgradeToCompleted/<id of the case you want to upgrade status of>
+PATCH : https://nyaylok-server.onrender.com/cases/upgradeToCompleted/<id of the case you want to upgrade status of>
 ```
 
 **Example Endpoint:**<br/>
-https://nyaylok-backend.vercel.app/cases/upgradeToOngoing/15092023180435434<br/>
+https://nyaylok-server.onrender.com/cases/upgradeToOngoing/15092023180435434<br/>
 
 This endpoint can only be triggered by the ***judge of the court*** to mark the closing of the case.
 

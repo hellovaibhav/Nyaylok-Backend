@@ -50,15 +50,15 @@ export const registerCase = async (req, res, next) => {
                         to: `+91${foundCase.phoneNumber}`
                     });
 
-                return res.status(200).json({ message: "Case filed successfully", savedCase });
+                 res.status(200).json({ message: "Case filed successfully", savedCase });
             }
             else {
-                return res.status(406).json({ message: "phone Number length not adequate" });
+                 res.status(406).json({ message: "phone Number length not adequate" });
             }
 
         });
     } catch (err) {
-        return res.status(404).json({ message: "there was some error case has not been uploaded yet" });
+         res.status(404).json({ message: "there was some error case has not been uploaded yet" });
     };
 };
 
@@ -150,8 +150,6 @@ export const variousCaseCount = async (req, res) => {
     const response = [{ "Registered Cases": registeredCases.length },
     { "Ongoing Cases": ongoingCases.length },
     { "Completed Cases": completedCases.length }];
-
-    console.log(registeredCases.length);
 
     res.status(200).json({ response });
 };
