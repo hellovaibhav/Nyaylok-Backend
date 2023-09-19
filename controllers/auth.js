@@ -21,12 +21,12 @@ export const register = async (req, res, next) => {
       });
 
       await newUser.save();
-      res.status(200).send("User has been created.");
+      res.status(200).json({ message: "User has been created." });
     } else {
-      res.status(403).send("confirm password dosen't match");
+      res.status(403).json({ message: "confirm password dosen't match" });
     }
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 export const login = async (req, res, next) => {
@@ -49,7 +49,7 @@ export const login = async (req, res, next) => {
       .cookie("nyayToken", token, {
         httpOnly: true,
         secure: true,
-        sameSite:'None',
+        sameSite: "None",
         expires: new Date(Date.now() + 4 * 60 * 60 * 1000),
       })
       .status(200)
