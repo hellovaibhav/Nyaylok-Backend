@@ -50,27 +50,32 @@ export const registerCase = async (req, res, next) => {
                         to: `+91${foundCase.phoneNumber}`
                     });
 
-                 res.status(200).json({ message: "Case filed successfully", savedCase });
+                res.status(200).json({ message: "Case filed successfully", savedCase });
             }
             else {
-                 res.status(406).json({ message: "phone Number length not adequate" });
+                res.status(406).json({ message: "phone Number length not adequate" });
             }
 
         });
     } catch (err) {
-         res.status(404).json({ message: "there was some error case has not been uploaded yet" });
+        res.status(404).json({ message: "there was some error case has not been uploaded yet" });
     };
 };
 
 export const getIncompleteCases = async (req, res, next) => {
     try {
-        const cases = await Case.find(
-            {
-                $or: [{ status: "Registered" }, { status: "Ongoing" }],
-            }).sort({ points: -1, DOF: 1 });
+        await verifyToken(req, res, async (err) => {
+            if (err) {
+                res.status(err.status).json(err.message);
+            }
+            const cases = await Case.find(
+                {
+                    $or: [{ status: "Registered" }, { status: "Ongoing" }],
+                }).sort({ points: -1, DOF: 1 });
 
 
-        res.status(200).json({ message: `successfull found ${cases.length} cases`, cases });
+            res.status(200).json({ message: `successfull found ${cases.length} cases`, cases });
+        });
     }
     catch (err) {
         console.error(err);
@@ -123,19 +128,24 @@ export const updateCase = async (req, res, next) => {
 
 export const getIncompleteCasesPaginated = async (req, res, next) => {
     try {
-        // Calculate offset based on the page and pageSize
-        const pageLimit = req.query.pageLimit || 7;
-        const pages = req.query.page;
+        await verifyToken(req, res, async (err) => {
+            if (err) {
+                res.status(err.status).json(err.message);
+            }
+            // Calculate offset based on the page and pageSize
+            const pageLimit = req.query.pageLimit || 7;
+            const pages = req.query.page;
 
 
-        const offset = (pages - 1) * pageLimit;
+            const offset = (pages - 1) * pageLimit;
 
-        // Your database query to retrieve a paginated subset of incomplete cases
-        const paginatedCases = await Case.find({
-            $or: [{ status: "Registered" }, { status: "Ongoing" }],
-        }).sort({ points: -1, DOF: 1 }).skip(offset).limit(pageLimit);
+            // Your database query to retrieve a paginated subset of incomplete cases
+            const paginatedCases = await Case.find({
+                $or: [{ status: "Registered" }, { status: "Ongoing" }],
+            }).sort({ points: -1, DOF: 1 }).skip(offset).limit(pageLimit);
 
-        res.status(200).json({ message: "here are your paginated cases", paginatedCases });
+            res.status(200).json({ message: "here are your paginated cases", paginatedCases });
+        });
     } catch (error) {
         console.log(error);
         next(error);
