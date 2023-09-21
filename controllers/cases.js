@@ -53,7 +53,7 @@ export const registerCase = async (req, res, next) => {
                         })
                 } catch (err) {
                     await Case.deleteOne({ caseId: savedCase.caseId });
-                    console.log(err);
+                    // console.log(err);
                     return res.status(err.status).json({ message: `Your case has not been filed. We are using a free Twilio account which restricts us from sending messages to unverified Phone number,Twilio is a paid service and uses these kinds of techniques to attract customers as well as to prevent anyone from using their service for spamming, you can read more about this on ${err.moreInfo}` })
                 }
                 return res.status(200).json({ message: "Case filed successfully", savedCase });
