@@ -82,6 +82,20 @@ _example output:_
 ```
 > ~~this unique token when pasted in right way into the browser can be used by anyone to signin without logging in~~
 
+## User logout
+
+### Endpoint for logging out
+
+```
+GET : https://nyaylok-server.onrender.com/auth/logout
+```
+
+_output :_
+```
+{
+    "message": "User has been logged out successfully"
+}
+```
 
 # Case realted API's
 
