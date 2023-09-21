@@ -43,14 +43,19 @@ export const registerCase = async (req, res, next) => {
                 const savedCase = await newCase.save();
                 const { index, foundCase } = await getCasePosition(caseNum);
 
-                client.messages
-                    .create({
-                        body: `Dear ${newCase.victimName}, Your case with Case Id : ${newCase.caseId} has been registered and is at position : ${index}, please check website for future updates of your case`,
-                        from: process.env.TWILIO_PHONE_NUMBER,
-                        to: `+91${foundCase.phoneNumber}`
-                    });
+                try {
+                    await client.messages
+                        .create({
+                            body: `Dear ${newCase.victimName}, Your case with Case Id : ${newCase.caseId} has been registered and is at position : ${index}, please check website for future updates of your case`,
+                            from: process.env.TWILIO_PHONE_NUMBER,
+                            to: `+91${foundCase.phoneNumber}`
+                        })
+                } catch (err) {
+                    await Case.deleteOne({ caseId: savedCase.caseId });
 
-                res.status(200).json({ message: "Case filed successfully", savedCase });
+                    return res.status(err.status).json({ message: `Your case has not been filed. We are using a free Twilio account which restricts us from sending messages to unverified Phone number,Twilio is a paid service and uses these kinds of techniques to attract customers as well as to prevent anyone from using their service for spamming, you can read more about this on ${err.moreInfo}` })
+                }
+                return res.status(200).json({ message: "Case filed successfully", savedCase });
             }
             else {
                 res.status(406).json({ message: "phone Number length not adequate" });
@@ -58,7 +63,7 @@ export const registerCase = async (req, res, next) => {
 
         });
     } catch (err) {
-        res.status(404).json({ message: "there was some error case has not been uploaded yet" });
+        res.status(404).json({ message: err });
     };
 };
 
