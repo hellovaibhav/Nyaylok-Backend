@@ -155,7 +155,7 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
     try {
         await verifyToken(req, res, async (err) => {
             if (err) {
-                res.status(err.status).json(err.message);
+                return res.status(err.status).json({message : err.message});
             }
             // Calculate offset based on the page and pageSize
             const pageLimit = req.query.pageLimit || 7;
