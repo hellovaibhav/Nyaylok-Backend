@@ -11,6 +11,7 @@ import Case from "../models/Case.js";
 import { getCaseId, getCasePosition } from "../utils/caseUtils.js";
 import { totalPoints } from "../utils/algorithm.js";
 import { verifyAdmin, verifyToken } from "../utils/token.js";
+import { createError } from "../utils/error.js";
 
 export const registerCase = async (req, res, next) => {
     try {
@@ -52,7 +53,7 @@ export const registerCase = async (req, res, next) => {
                         })
                 } catch (err) {
                     await Case.deleteOne({ caseId: savedCase.caseId });
-
+                    console.log(err);
                     return res.status(err.status).json({ message: `Your case has not been filed. We are using a free Twilio account which restricts us from sending messages to unverified Phone number,Twilio is a paid service and uses these kinds of techniques to attract customers as well as to prevent anyone from using their service for spamming, you can read more about this on ${err.moreInfo}` })
                 }
                 return res.status(200).json({ message: "Case filed successfully", savedCase });
@@ -70,27 +71,34 @@ export const registerCase = async (req, res, next) => {
 export const getIncompleteCases = async (req, res, next) => {
     try {
         await verifyToken(req, res, async (err) => {
+
             if (err) {
-                res.status(err.status).json(err.message);
+
+                return res.status(err.status).json({ message: err.message });
             }
             const cases = await Case.find(
                 {
                     $or: [{ status: "Registered" }, { status: "Ongoing" }],
                 }).sort({ points: -1, DOF: 1 });
 
+            if (!cases) {
+                return res.status(200).json({ messages: "No Registered or Ongoing Cases found" });
+            }
 
-            res.status(200).json({ message: `successfull found ${cases.length} cases`, cases });
+            return res.status(200).json({ message: `successfull found ${cases.length} cases`, cases });
+
         });
     }
     catch (err) {
-        console.error(err);
-        next(err);
+        console.log(err.status, err.message);
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
     }
 };
 
 export const getCaseById = async (req, res, next) => {
     try {
-
         const { index, foundCase } = await getCasePosition(req.params.caseId);
 
         if (index !== -1) {
@@ -108,26 +116,38 @@ export const getCaseById = async (req, res, next) => {
         }
 
     } catch (err) {
-        console.log(err);
-        next(err);
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
     }
 };
 
 export const updateCase = async (req, res, next) => {
     try {
-        const updatedCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, {
+        await verifyToken(req, res, async (err) => {
+            if (err) {
+                return res.status(err.status).json({ message: err.message });
+            }
+            const updatedCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, {
 
-            victimName: req.body.victim,
-            firNumber: req.body.fir,
-            IPCsections: req.body.ipcs,
-            prevCaseId: req.body.prevCaseId
+                victimName: req.body.victim,
+                firNumber: req.body.fir,
+                IPCsections: req.body.ipcs,
+                prevCaseId: req.body.prevCaseId
 
-        }, { new: true });
+            }, { new: true });
 
-        res.status(200).json({ message: "case updated succefully", updatedCase });
+            if (!updatedCase) {
+                return res.status(404).json({ message: "No case with provided Case Id was found" });
+            }
+
+
+            res.status(200).json({ message: "case updated succefully", updatedCase });
+        });
     } catch (err) {
-        console.error(err);
-        next(err);
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
     }
 };
 
@@ -152,21 +172,29 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
             res.status(200).json({ message: "here are your paginated cases", paginatedCases });
         });
     } catch (error) {
-        console.log(error);
-        next(error);
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
     }
 };
 
 export const variousCaseCount = async (req, res) => {
-    const registeredCases = await Case.find({ status: "Registered" });
-    const ongoingCases = await Case.find({ status: "Ongoing" });
-    const completedCases = await Case.find({ status: "Completed" });
+    try {
+        const registeredCases = await Case.find({ status: "Registered" });
+        const ongoingCases = await Case.find({ status: "Ongoing" });
+        const completedCases = await Case.find({ status: "Completed" });
 
-    const response = [{ "Registered Cases": registeredCases.length },
-    { "Ongoing Cases": ongoingCases.length },
-    { "Completed Cases": completedCases.length }];
+        const response = [{ "Registered Cases": registeredCases.length },
+        { "Ongoing Cases": ongoingCases.length },
+        { "Completed Cases": completedCases.length }];
 
-    res.status(200).json({ response });
+        res.status(200).json({ response });
+    }
+    catch (err) {
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
+    }
 };
 
 export const upgradeToOngoing = async (req, res, next) => {
@@ -183,8 +211,9 @@ export const upgradeToOngoing = async (req, res, next) => {
             res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
         });
     } catch (err) {
-        console.error(err);
-        next(err);
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
     }
 };
 
@@ -203,7 +232,8 @@ export const upgradeToCompleted = async (req, res, next) => {
             res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
         });
     } catch (err) {
-        console.error(err);
-        next(err);
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
     }
 };

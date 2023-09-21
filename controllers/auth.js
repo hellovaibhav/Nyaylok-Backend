@@ -26,14 +26,16 @@ export const register = async (req, res, next) => {
       res.status(403).json({ message: "confirm password dosen't match" });
     }
   } catch (err) {
-    return next(err);
+    const errorCode = err.status || 404;
+    const errorMessage = err.message || "Something went wrong";
+    res.status(errorCode).json({ message: errorMessage });
   }
 };
 export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ empId: req.body.empId });
 
-    if (!user) return next(createError(404, "User not found!"));
+    if (!user) throw(createError(404, "User not found!"));
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
@@ -41,7 +43,7 @@ export const login = async (req, res, next) => {
     );
 
     if (!isPasswordCorrect)
-      return next(createError(400, "Wrong password or username!"));
+      throw createError(400, "Wrong password or username!");
 
     const { token, userToken } = await generateToken(user);
     const { password, isAdmin, secretToken, ip, ...otherDetails } = user._doc;
@@ -59,6 +61,8 @@ export const login = async (req, res, next) => {
         value: userToken,
       });
   } catch (err) {
-    next(createError(404, "Something went Wrong !"));
+    const errorCode = err.status || 404;
+    const errorMessage = err.message || "Something went wrong";
+    res.status(errorCode).json({ message: errorMessage });
   }
 };

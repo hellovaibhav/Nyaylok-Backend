@@ -21,7 +21,7 @@ export const generateToken = async (req, res, next) => {
 
     await req.save();
 
-    return {token,userToken};
+    return { token, userToken };
   } catch (err) {
     return err;
   }
@@ -48,9 +48,11 @@ export const verifyToken = async (req, res, next) => {
 
     const foundUser = await User.findOne({ empId: req.user.empId });
 
+    if (!foundUser) { return next(createError(404, "User not Found !")); }
+
     if (foundUser.ip !== verificationIp) { return next(createError(403, "User needs to login again!")); }
 
-   next();
+    next();
   });
 };
 

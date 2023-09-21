@@ -28,7 +28,7 @@ export const totalPoints = async(arr,initialPoints)=>{
             }
         } catch (err) {
             console.error("Error occurred:", err.message);
-            reject({ status: "something went wrong" }); 
+            reject({ status: "something went wrong " }); 
         }
     });
 };
