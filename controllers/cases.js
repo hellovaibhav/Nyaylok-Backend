@@ -171,7 +171,7 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
 
             res.status(200).json({ message: "here are your paginated cases", paginatedCases });
         });
-    } catch (error) {
+    } catch (err) {
         const errorCode = err.status || 404;
         const errorMessage = err.message || "Something went wrong";
         res.status(errorCode).json({ message: errorMessage });
