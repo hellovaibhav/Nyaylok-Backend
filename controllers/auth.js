@@ -35,7 +35,7 @@ export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ empId: req.body.empId });
 
-    if (!user) throw(createError(404, "User not found!"));
+    if (!user) throw (createError(404, "User not found!"));
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
@@ -65,4 +65,8 @@ export const login = async (req, res, next) => {
     const errorMessage = err.message || "Something went wrong";
     res.status(errorCode).json({ message: errorMessage });
   }
+};
+
+export const logout = async (req, res, next) => {
+  res.clearCookie("nyayToken").json({ message: "User has been logged out successfully" });
 };
