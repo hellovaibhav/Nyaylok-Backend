@@ -155,7 +155,7 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
     try {
         await verifyToken(req, res, async (err) => {
             if (err) {
-                return res.status(err.status).json({message : err.message});
+                return res.status(err.status).json({ message: err.message });
             }
             // Calculate offset based on the page and pageSize
             const pageLimit = req.query.pageLimit || 7;
@@ -227,11 +227,31 @@ export const upgradeToCompleted = async (req, res, next) => {
                 return res.status(401).json({ message: err.message });
             }
 
-            const foundCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, { status: "Completed" }, { new: true });
+            const foundCase = await Case.findOneAndUpdate({ caseId: req.params.caseId }, { status: "Completed", DOC: Date.now() }, { new: true });
 
             res.status(200).json({ message: `Case number : ${foundCase.caseId}'s status has been upgraded to ${foundCase.status}` });
         });
     } catch (err) {
+        const errorCode = err.status || 404;
+        const errorMessage = err.message || "Something went wrong";
+        res.status(errorCode).json({ message: errorMessage });
+    }
+};
+
+export const allCaseInfo = async (req, res) => {
+    try {
+        await verifyToken(req, res, async (err) => {
+            if (err) {
+                // Handle authentication error here
+                return res.status(401).json({ message: err.message });
+            }
+
+            const foundCase = Case.findById(req.params.id);
+
+            res.status(200).json({ message: "found the requested case", foundCase });
+        });
+    }
+    catch (err) {
         const errorCode = err.status || 404;
         const errorMessage = err.message || "Something went wrong";
         res.status(errorCode).json({ message: errorMessage });
