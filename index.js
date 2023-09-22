@@ -17,8 +17,7 @@ dotenv.config();
 
 const port = process.env.PORT || 1978;
 
-var allowedOrigins = [
-];
+var allowedOrigins = ['http://localhost:2023', 'http://localhost:420', 'https://nyaylok.onrender.com'];
 
 var options = {
   credentials: true,
