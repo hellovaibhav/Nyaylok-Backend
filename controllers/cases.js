@@ -12,6 +12,7 @@ import { getCaseId, getCasePosition } from "../utils/caseUtils.js";
 import { totalPoints } from "../utils/algorithm.js";
 import { verifyAdmin, verifyToken } from "../utils/token.js";
 import { createError } from "../utils/error.js";
+import { getRedisData, setRedisData } from "../utils/redisUtils.js";
 
 export const registerCase = async (req, res, next) => {
     try {
@@ -161,13 +162,21 @@ export const getIncompleteCasesPaginated = async (req, res, next) => {
             const pageLimit = req.query.pageLimit || 7;
             const pages = req.query.page;
 
+            const cacheKey = `getPaginatedCases:${pages}:${pageLimit}`;
 
+            const cachedData = await getRedisData(cacheKey);
+
+            if (cachedData) {
+                return res.status(200).json(cachedData);
+            }
             const offset = (pages - 1) * pageLimit;
 
             // Your database query to retrieve a paginated subset of incomplete cases
             const paginatedCases = await Case.find({
                 $or: [{ status: "Registered" }, { status: "Ongoing" }],
             }).sort({ points: -1, DOF: 1 }).skip(offset).limit(pageLimit);
+
+            await setRedisData(cacheKey, paginatedCases);
 
             res.status(200).json({ message: "here are your paginated cases", paginatedCases });
         });
@@ -184,9 +193,19 @@ export const variousCaseCount = async (req, res) => {
         const ongoingCases = await Case.find({ status: "Ongoing" });
         const completedCases = await Case.find({ status: "Completed" });
 
+        const cacheKey = `variousCaseCount`;
+
+        const cachedData = await getRedisData(cacheKey);
+
+        if (cachedData) {
+            return res.status(200).json({ response: cachedData });
+        }
+
         const response = [{ "Registered Cases": registeredCases.length },
         { "Ongoing Cases": ongoingCases.length },
         { "Completed Cases": completedCases.length }];
+
+        await setRedisData(cacheKey, response);
 
         res.status(200).json({ response });
     }

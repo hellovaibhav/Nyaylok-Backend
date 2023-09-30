@@ -1,6 +1,7 @@
 import moment from "moment-timezone";
 import Case from "../models/Case.js";
 import { createError } from "./error.js";
+import { getRedisData, setRedisData } from "./redisUtils.js";
 
 // imported files
 
@@ -20,6 +21,15 @@ export const getCaseId = async () => {
 
 export const getCasePosition = async (myCaseId) => {
     try {
+
+        const cacheKey= `caseId:${myCaseId}`
+
+        const cachedData = await getRedisData(cacheKey);
+
+        if(cachedData)
+        {
+            return cachedData;
+        }
 
         const foundCase = await Case.findOne({ caseId: myCaseId });
         
@@ -45,6 +55,7 @@ export const getCasePosition = async (myCaseId) => {
             }
         });
         index += 1;
+        setRedisData(cacheKey,{index,foundCase});
         return { index, foundCase };
     } catch (err) {
         throw err; // Rethrow the error so it can be caught by the caller

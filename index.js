@@ -55,7 +55,7 @@ schedule.scheduleJob("0 0 0 * * *", async () => {
 
 const connect = () => {
   try {
-    mongoose.connect(process.env.MONGO);
+    mongoose.connect(process.env.MONGO_URL);
     console.log("Connected to database");
   } catch (err) {
     throw err;
